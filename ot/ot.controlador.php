@@ -79,9 +79,13 @@ function Form_Or()
 				</div>
 				<br>
 				<div class="form-group">
-					<b>Desea el cliente (Excepto las piezas de garant&iacute;a) conservar las piezas cambiadas?</b><br>
-					SI <input type="radio" id="si" name="consentimiento" value="si">  
-					NO <input type="radio" id="no" name="consentimiento" value="no">
+					<b>Desea el cliente (Excepto las piezas de garant&iacute;a)<br>Conservar las piezas cambiadas?</b><br> 
+					<select name="consentimiento" id="consentimiento" class="form-control">
+						<option value=""> Seleccione opcion</option>
+						<option value="S"> Si</option>
+						<option value="N"> No</option>
+					</select>
+
 				</div><h5>
 				<hr>
 				<div class="form-group">
@@ -89,7 +93,7 @@ function Form_Or()
 				</div>
 				<br>
 				<div class="form-group">
-					<b>Todo Ok</b> <input type="checkbox" id="todos" name="todos" value="ok">
+					<b>Todo Ok</b> <input type="checkbox" id="todos" name="todos" value="ok" onclick="checbox()">
 					<br>
 					Reloj <input type="checkbox" id="reloj" name="reloj" value="reloj">
 					Radio Caratula <input type="checkbox" id="radio" name="radio" value="radio">
@@ -112,9 +116,9 @@ function Form_Or()
 					Llavero <input type="checkbox" id="llaveros" name="llaveros" values="llaveros">
 					Gato Palanca <input type="checkbox" id="gato" name="gato" value="gato">
 					Herramienta <input type="checkbox" id="herramienta" name="herramienta" value="herramienta">
-					Rueda Repuesto <input type="checkbox" id="ruedar" name="ruedar" value="ruedar">
-					Tercer Stop <input type="checkbox" id="tstop" name="tstop" value="tstop">
-					Equipo Carretera <input type="checkbox" id="equipoc" name="equipoc" value="equipoc">
+					Rueda Repuesto <input type="checkbox" id="ruedar" name="ruedar" value="rueda_repuesto">
+					Tercer Stop <input type="checkbox" id="tstop" name="tstop" value="tercer_stop">
+					Equipo Carretera <input type="checkbox" id="equipoc" name="equipoc" value="equipo_carretera">
 					Stops <input type="checkbox" id="stops" name="stops" value="stops">
 				</div>
 				<hr>
@@ -123,8 +127,11 @@ function Form_Or()
 				</div>
 				<br>
 				<div class="form-group">
-					Golpe <input type="radio" id="golpe" name="tipotrabajo" value="golpe">  
-					Raya  	<input type="radio" id="raya" name="tipotrabajo" value="raya">
+					<select name="tipotrabajo" id="tipotrabajo" class="form-control">
+						<option value=""> Seleccione tipo de trabajo</option>
+						<option value="G"> Golpe</option>
+						<option value="R"> Raya</option>
+					</select>
 				</div>
 				<br>
 				<div class="form-group">
@@ -133,6 +140,7 @@ function Form_Or()
 				<br>
 				<div class="form-group">
 					<select name="codigotrabajo" id="codigotrabajo" class="form-control">
+						<option value="">Seleccione Parte Vehiculo</option>
 						<option value="1">Parte Vehiculo 1</option>
 						<option value="2">Parte Vehiculo 2</option>
 						<option value="3">Parte Vehiculo 3</option>
@@ -157,10 +165,16 @@ function Form_Or()
 					</select>
 				</div>
 				<div class="form-group">
-					<input type="text" name="partevehiculo" id="partevehiculo"   size="70%"  class="form-control" >
+					<input type="text" name="partevehiculo" id="partevehiculo" placeholder="Descripcion del trabajo a realizar"  size="70%"  class="form-control" >
 				</div>
 				<div class="form-group">
-					<button type="button" class="btn btn-info"><i class="fa-solid fa-circle-down"></i> Agregar</button>
+					<span class="btn btn-info" onClick="BtnCrearTrabajo(\''.$comprobate.'\')">
+						<strong><i class="fa-solid fa-circle-down" ></i> Agregar</strong>
+					</span>
+				</div>
+				<br>
+				<div class="form-group">
+					<div id="Trabajosrealiza"></div>
 				</div>
 			</form>
 			<br><br>  
@@ -287,51 +301,83 @@ function GuardarOr($form,$compro)
     global $objResponse;
     global $BD; 
 	include_once("clientes/clientes.modelo.php");
-	//print_r($form);
+	//dtaa cliente
     $docu   =   trim($form['docu']);
     $nomape =   trim($form['nomape']);
     $dir    =   trim($form['dir']);
     $tel1   =   trim($form['tel1']);
     $tel2   =   trim($form['tel2']);
-
+	//data vehiculo
 	$placa   =   trim($form['placa']);
     $modelo =   trim($form['modelo']);
     $tipo    =   trim($form['tipo']);
     $color   =   trim($form['color']);
     $motor   =   trim($form['motor']);
 
-	$gasolina   =   trim($form['gasolina']);
-	$kilometros   =   trim($form['kilometros']);
+	$gasolina   	=   trim($form['gasolina']);
+	$kilometros   	=   trim($form['kilometros']);
     $consentimiento =   trim($form['consentimiento']);
-    $todos    =   trim($form['todos']);
-    $reloj   =   trim($form['reloj']);
-    $radio   =   trim($form['radio']);
-	$cds   =   trim($form['cds']);
-    $encendedor =   trim($form['encendedor']);
-    $cenicero    =   trim($form['cenicero']);
-    $forros   =   trim($form['forros']);
-    $tapetes   =   trim($form['tapetes']);
-	$parasoles   =   trim($form['parasoles']);
-    $manijas =   trim($form['manijas']);
-    $cinturones    =   trim($form['cinturones']);
-    $copas   =   trim($form['copas']);
-	$extinguidor   =   trim($form['extinguidor']);
-	$farolas   =   trim($form['farolas']);
-	$espejos   =   trim($form['espejos']);
-	$antenas   =   trim($form['antenas']);
+	//Inventario vehiculo
+    $todos    		=   trim($form['todos']);
+    $reloj   		=   trim($form['reloj']);
+    $radio   		=   trim($form['radio']);
+	$cds   			=   trim($form['cds']);
+    $encendedor 	=   trim($form['encendedor']);
+    $cenicero    	=   trim($form['cenicero']);
+    $forros   		=   trim($form['forros']);
+    $tapetes   		=   trim($form['tapetes']);
+	$parasoles   	=   trim($form['parasoles']);
+    $manijas 		=   trim($form['manijas']);
+    $cinturones    	=   trim($form['cinturones']);
+    $copas   		=   trim($form['copas']);
+	$extinguidor   	=   trim($form['extinguidor']);
+	$farolas   		=   trim($form['farolas']);
+	$espejos   		=   trim($form['espejos']);
+	$antenas   		=   trim($form['antenas']);
 	$exploradoras   =   trim($form['exploradoras']);
-	$emblemas   =   trim($form['emblemas']);
-	$cuchillas   =   trim($form['cuchillas']);
-	$llaveros   =   trim($form['llaveros']);
-	$gato   =   trim($form['gato']);
-	$ruedar   =   trim($form['ruedar']);
-	$tstop   =   trim($form['tstop']);
-	$equipoc   =   trim($form['equipoc']);
-	$stops   =   trim($form['stops']);
-	$tipotrabajo   =   trim($form['tipotrabajo']);
-	$herramienta   =   trim($form['herramienta']);
-	$codigotrabajo   =   trim($form['codigotrabajo']);
-	$partevehiculo   =   trim($form['partevehiculo']);
+	$emblemas   	=   trim($form['emblemas']);
+	$cuchillas   	=   trim($form['cuchillas']);
+	$llaveros   	=   trim($form['llaveros']);
+	$gato   		=   trim($form['gato']);
+	$ruedar   		=   trim($form['ruedar']);
+	$tstop   		=   trim($form['tstop']);
+	$equipoc   		=   trim($form['equipoc']);
+	$stops   		=   trim($form['stops']);
+	//Descripcion trabajos
+	$tipotrabajo   	=   trim($form['tipotrabajo']);
+	$herramienta   	=   trim($form['herramienta']);
+	$codigotrabajo  =   trim($form['codigotrabajo']);
+	$partevehiculo  =   trim($form['partevehiculo']);
+
+	$arrayInve= array(
+						$reloj,
+						$radio,
+						$cds,
+						$encendedor,
+						$cenicero,
+						$forros,
+						$tapetes,   		
+						$parasoles,   
+						$manijas, 		 
+						$cinturones,  
+						$copas,   		 
+						$extinguidor, 
+						$farolas,   		
+						$espejos,   		
+						$antenas,  		
+						$exploradoras,
+						$emblemas,   	
+						$cuchillas,   
+						$llaveros,   	
+						$gato,   		  
+						$ruedar,   		
+						$tstop,   		
+						$equipoc,   		
+						$stops
+					);
+		$json_arrayinve = json_encode($arrayInve);
+
+
 	
 	$consultar = Consultar_cliente($docu);
 	if($BD->numreg($consultar)>0)
@@ -386,12 +432,12 @@ function GuardarOr($form,$compro)
 	}
 
 
-	$CrearOR = CrearOrden($compro,$placa,$kilometros,$gasolina);
+	$CrearOR = CrearOrden($compro,$placa,$kilometros,$gasolina,$consentimiento,$json_arrayinve);
 	if(is_iterable($CrearOR))
 	{
 		$objResponse->Script("alerta('<h5 class=text-info><strong>Muy Bien! Se crea correctamente la orden de trabajo</strong></h5>')");
-		$objResponse->Script("xajax_EditarVehiculo('$placa','$id');"); 
-	}
+		$objResponse->Script("regresarmenu('');"); //debera redireccionar al impresor en blanco
+	} 
 	else
 	{
 		$objResponse->Script("alerta('<h5 class=text-danger><strong>Atencion! Hubo un error al guardar</strong></h5>')");
@@ -400,6 +446,115 @@ function GuardarOr($form,$compro)
  	return $objResponse;
 }
 $xajax->registerFunction('GuardarOr');
+
+function GuardarTipoTra($compro,$tipotrabajo,$codigotrabajo,$partevehiculo)
+{
+    global $objResponse;
+    global $BD; 
+
+	$compro = trim($compro);
+	$compro = explode('-',$compro);
+	$comprobate = $compro[0];
+	$nrocompro = $compro[1];
+
+	$error ="";
+    if(trim($tipotrabajo)==""){
+        $error .= "<li>Debe ingresar tipo  de trabajo a realizar</li>";
+    }
+    if(trim($codigotrabajo)==""){
+        $error .= "<li>Debe ingresar una parte del vehiculo segun la grafica</li>";
+    }
+    if(trim($partevehiculo)==""){
+        $error .= "<li>Debe ingresar una descripcion del trabajo a realizar en la parte seleccionada</li>";
+    }
+
+	
+    if($error =="")
+    {
+		$CrearTipotra = CrearTPtrabajo($comprobate,$nrocompro,$tipotrabajo,$codigotrabajo,$partevehiculo);
+
+		if(is_iterable($CrearTipotra))
+		{
+			$objResponse->Script("alerta('<h5 class=text-info><strong>Muy Bien! Se crea correctamente el trabajo a realizar</strong></h5>')");
+			$objResponse->Assign("tipotrabajo","value","");               
+			$objResponse->Assign("codigotrabajo","value","");             
+			$objResponse->Assign("partevehiculo","value","");
+			$objResponse->Script("xajax_VertiposTra($nrocompro);");               
+		}
+		else
+		{
+			$objResponse->Script("alerta('<h5 class=text-danger><strong>Atencion! Hubo un error al guardar</strong></h5>')");
+		}
+
+	}else
+	{
+		$objResponse->Script("alerta('Espera un momento hay campos vacios<br> $error')");  
+	}
+
+	return $objResponse;
+}
+$xajax->registerFunction('GuardarTipoTra');
+
+//Consulta los trabajo que va realizando
+function VertiposTra($orden)
+{
+    global $objResponse;
+    global $BD; 
+    //Consulto todos los clientes
+    $Vertrabajos = ConsultarTrabajos($orden);
+    $tabla ='
+    <div class="table-responsive">
+        <hr>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Nro Orden</th>
+                <th>DescripcionTrabajo</th>
+                <th>Parte Vehiculo</th>
+                <th>Trabajo a Realizar</th>
+            </tr>     
+        </thead>
+        <tbody>';
+        while(!$Vertrabajos->EOF)
+        {
+            $numero  = trim($Vertrabajos->fields["numero"]);
+            $tipo_trabajo = trim($Vertrabajos->fields["tipo_trabajo"]);
+            $parte  = trim($Vertrabajos->fields["parte"]);
+            $descri_trabajo  = trim($Vertrabajos->fields["descri_trabajo"]);
+
+			switch ($tipo_trabajo) {
+				case 'G':
+					$tex_tipo_trabajo = "GOLPE";
+				break;
+				
+				case 'R':
+					$tex_tipo_trabajo = "RAYA";
+				break;
+			}
+
+
+            $tabla .='
+            <tr>
+                <td>'.$numero.'</td>
+               <td>'.$tex_tipo_trabajo.'</td>
+               <td>'.$parte.'</td>
+               <td>'.$descri_trabajo.'</td>
+            </tr>
+             ';
+      
+            $Vertrabajos->MoveNext();   
+        }
+  
+        $tabla .='
+            </body>
+        </table>
+    </div>
+    ';
+    $objResponse->Assign("Trabajosrealiza","innerHTML",utf8_decode($tabla));
+   
+    return $objResponse;
+}
+$xajax->registerFunction('VertiposTra');
 
 function Traenom2($cel)
 {
@@ -422,424 +577,6 @@ function Traenom2($cel)
 }
 $xajax->registerFunction('Traenom2');
 
-function hora($fecha)
-{
-    global $objResponse;
-    global $BD; 
-    $consultar = Listadohoras($fecha);
-    $option='';
-    while(!$consultar->EOF)
-    {
-            $hora = trim($consultar->fields["descri"]);
-            $idhora = trim($consultar->fields["id"]);
-           	$option .= '<option value="'.$idhora.'">'.$hora.'</option>';	
-       $consultar->MoveNext();   
-    }
-    $objResponse->Assign("hora","innerHTML",$option);
- return $objResponse;
-}
-$xajax->registerFunction('hora');
 
-function consulcitas()
-{
-
-	global $objResponse;	
-	global $BD;    
-	$tabla='
-	
-
-	<div class="container-fluid">	
-		<div class="row">
-		<!-- Panel citas dia **********************************************-->
-			<div class="col-md-6">
-				<div class="btn-group"> 
-		            <span class="btn btn-success pull-left" id="regremenu" onclick="xajax_citasDia()">
-		            	<i class="glyphicon glyphicon-resize-full" ></i>  <b>Citas Dia</b>
-		            </span>
-			    </div>
-				<div class="panel panel-success">
-					<div class="panel-heading"><h3><strong><li class="glyphicon glyphicon-calendar"></li> Citas Asignadas en el Dia</strong></h3></div>
-					<div class="panel-body">
-						<table class="table table-dark">
-							  <thead>
-							    <tr>
-							      <th scope="col" bgcolor="#99E7BA">CITAS OK!</th>
-							      <th scope="col" bgcolor="#ECA1A7">CITAS PENDIENTES!</th>
-							    </tr>
-							  </thead>
-						 </table> 
-						<table id="tabla_informe1" class="table table-sm table-inverse table-hover responsive" style="font-size: 10px;" width="100%" align="center" border="1" bordercolor="#CCCCCC" cellpadding="4" cellspacing="1">
-							<thead>
-							<tr>
-								<th>CLIENTE</th>
-								<th>HORA</th>
-								<th>ESTADO</th>
-							</tr>     
-							</thead>
-						<tbody>';
-						$CitasDelDia = citasdeldia();
-						$time1 = date("H:i");
-						while(!$CitasDelDia->EOF)
-					    {
-						    $cliente1 = trim($CitasDelDia->fields["nombre"]);
-						    $hora1 = trim($CitasDelDia->fields["hora"]);
-						    if($hora1>trim($time1))
-						    {
-						    	$estado1 = "<b>Cita Pendiente</b>";
-						    	$tr1='bgcolor="#ECA1A7"';
-						    }else{
-						    	$estado1 = "<b>Cita ok!</b>";
-						    	$tr1='bgcolor="#99E7BA"';
-						    }
-							$tabla.='
-								<tr '.$tr1.'>
-									<td>'.$cliente1.'</td>
-									<td>'.$hora1.'</td>
-									<td>'.$estado1.'</td>
-								</tr> 
-							';
-							$CitasDelDia->MoveNext();   
-						}	
-						$tabla.='
-					        </body>
-					        <tfoot>
-					            <tr>
-					                <td></td>
-					                <td></td>
-					                <td></td>
-					            </tr>
-					        </tfoot>
-					    </table>	
-					</div>
-				</div>
-			</div>';
-
-			$tabla.='
-			<!-- Panel citas programdas **********************************************-->
-			<div class="col-md-6">
-				<div class="btn-group"> 
-		            <span class="btn btn-info pull-left" id="regremenu" onclick="xajax_citaPrograma()">
-		            	<i class="glyphicon glyphicon-resize-full" ></i><b>Citas Programadas</b>
-		            </span>
-			    </div>
-				<div class="panel panel-info">
-					<div class="panel-heading"><h3><strong><li class="glyphicon glyphicon-calendar"></li> Citas Programadas en otra fecha</strong></h3></div>
-					<div class="panel-body">
-
-						<table class="table table-dark">
-							  <thead>
-							    <tr>
-							      <th scope="col" bgcolor="#99E7BA">CITAS OK!</th>
-							      <th scope="col" bgcolor="#ECA1A7">CITAS PENDIENTES!</th>
-							    </tr>
-							  </thead>
-						 </table> 
-						<table id="tabla_informe2" class="table table-sm table-inverse table-hover responsive" style="font-size: 10px;" width="100%" align="center" border="1" bordercolor="#CCCCCC" cellpadding="4" cellspacing="1">
-							<thead>
-							<tr>
-								<th>CLIENTE</th>
-								<th>HORA</th>
-								<th>FECHA</th>
-								<th>ESTADO</th>
-							</tr>     
-							</thead>
-						<tbody>
-						';
-						$CitasPro = CitasPro();
-						$time2 = date("H:i");
-						while(!$CitasPro->EOF)
-					    {
-						    $client2 = trim($CitasPro->fields["nombre"]);
-						    $hora2 = trim($CitasPro->fields["hora"]);
-						    $fecha = trim($CitasPro->fields["fecha"]);
-						   	$sistemfecha = date("Y-m-d");
-
-
-						   	if($sistemfecha==$fecha)
-						   	{
-						   		if($hora2>trim($time2))
-							    {
-							    	$estado2 = "<b>Cita Pendiente</b>";
-							    	$tr2='bgcolor="#ECA1A7"';
-							    }else{
-							    	$estado2 = "<b>Cita ok!</b>";
-							    	$tr2='bgcolor="#99E7BA"';
-							    }
-						   	}else{
-						   		$estado2 = "<b>Cita Pendiente</b>";
-							    $tr2='bgcolor="#ECA1A7"';
-						   	}	
-	
-
-							$tabla.='
-								<tr '.$tr2.'>
-									<td>'.$client2.'</td>
-									<td>'.$hora2.'</td>
-									<td>'.$fecha.'</td>
-									<td>'.$estado2.'</td>
-								</tr> 
-							';
-							$CitasPro->MoveNext();   
-						}	
-						
-						$tabla.='
-					        </body>
-					        <tfoot>
-					            <tr>
-					                <td></td>
-					                <td></td>
-					                <td></td>
-					                <td></td>
-					            </tr>
-					        </tfoot>
-					    </table>
-					</div>
-				</div>
-			</div>
-		</div>	
-	</div>';
-	 $objResponse->Assign("citas", "innerHTML", utf8_decode($tabla));
-	 $objResponse->Script("renderizatablaAyudas('tabla_informe1',[],false,'Bfrtilp');"); 
-	 $objResponse->Script("renderizatablaAyudas('tabla_informe2',[],false,'Bfrtilp');"); 			
-	
- return $objResponse;
-
-}
-$xajax->registerFunction('consulcitas');
-
-function citasDia()
-{
-	global $objResponse;	
-	global $BD;    
-	$tabla='
-		<div class="btn-group"> 
-            <span class="btn btn-success pull-left" id="regremenu" onclick="xajax_consulcitas()">
-            	<i class="glyphicon glyphicon-resize-small" ></i> <b>Citas Dia</b>
-            </span>
-		 </div>
-		<div class="panel panel-success">
-			<div class="panel-heading"><h3><strong><li class="glyphicon glyphicon-calendar"></li> Citas Asignadas en el Dia</strong></h3></div>
-			<div class="panel-body">
-				<table class="table table-dark">
-					  <thead>
-					    <tr>
-					      <th scope="col" bgcolor="#99E7BA">CITAS OK!</th>
-					      <th scope="col" bgcolor="#ECA1A7">CITAS PENDIENTES!</th>
-					    </tr>
-					  </thead>
-				 </table> 
-				<table id="tabla_informe1" class="table table-sm table-inverse table-hover responsive" style="font-size: 10px;" width="100%" align="center" border="1" bordercolor="#CCCCCC" cellpadding="4" cellspacing="1">
-					<thead>
-					<tr>
-						<th>CLIENTE</th>
-						<th>HORA</th>
-						<th>ESTADO</th>
-						<th></th>
-					</tr>     
-					</thead>
-				<tbody>';
-				$CitasDelDia = citasdeldia();
-				$time1 = date("H:i");
-				while(!$CitasDelDia->EOF)
-			    {
-			    	$id = trim($CitasDelDia->fields["id"]);
-				    $cliente1 = trim($CitasDelDia->fields["nombre"]);
-				    $hora1 = trim($CitasDelDia->fields["hora"]);
-				   
-				    if($hora1>trim($time1))
-				    {
-				    	$estado1 = "<b>Cita Pendiente</b>";
-				    	$tr1='bgcolor="#ECA1A7"';
-				    	$buton = '
-						<span class="btn btn-primary pull-left" id="regremenu" onclick="ConfirCancelCitDia('.$id.')">
-							<i class="glyphicon glyphicon-remove-sign" ></i> <b>Cancelar Cita</b>
-						</span>
-				    	';
-				    }else{
-				    	$estado1 = "<b>Cita ok!</b>";
-				    	$tr1='bgcolor="#99E7BA"';
-				    	$buton = '
-						<span class="btn btn-primary pull-left" disabled="disable">
-							<i class="glyphicon glyphicon-remove-sign" ></i> <b>Cancelar Cita</b>
-						</span>
-				    	';
-				    }
-					$tabla.='
-						<tr >
-							<td '.$tr1.'>'.$cliente1.'</td>
-							<td '.$tr1.'>'.$hora1.'</td>
-							<td '.$tr1.'>'.$estado1.'</td>
-							<td>'.$buton.'</td>
-						</tr> 
-					';
-					$CitasDelDia->MoveNext();   
-				}	
-				$tabla.='
-			        </body>
-			        <tfoot>
-			            <tr>
-			                <td></td>
-			                <td></td>
-			                <td></td>
-			                <td></td>
-			            </tr>
-			        </tfoot>
-			    </table>	
-			</div>
-		</div>';
-
-
-	 $objResponse->Assign("citas", "innerHTML", utf8_decode($tabla));
-	 $objResponse->Script("renderizatablaAyudas('tabla_informe3',[],false,'Bfrtilp');"); 
-
- return $objResponse;
-
-}
-$xajax->registerFunction('citasDia');
-
-function CancelCitaDia($id)
-{
-	global $objResponse;	
-	global $BD;    
-	$CanceCitaDia = Cancela_CitaDia($id);
-	if(count($CanceCitaDia)>0)
-	{ 
-		$objResponse->Script("msjcancelacita()");      
-	}else
-	{
-		$objResponse->Script("alerta('<h5 class=text-danger><strong>Atencion! Hubo un error al guardar</strong></h5>')");
-	} 
-
-	return $objResponse;
-}
-$xajax->registerFunction('CancelCitaDia');
-
-function citaPrograma()
-{
-	global $objResponse;	
-	global $BD;    
-	$tabla='
-				<div class="btn-group"> 
-		            <span class="btn btn-info pull-left" id="regremenu" onclick="xajax_consulcitas()">
-		            	<i class="glyphicon glyphicon-resize-small" ></i><b>Citas Programadas</b>
-		            </span>
-			    </div>
-				<div class="panel panel-info">
-					<div class="panel-heading"><h3><strong><li class="glyphicon glyphicon-calendar"></li> Citas Programadas en otra fecha</strong></h3></div>
-					<div class="panel-body">
-
-						<table class="table table-dark">
-							  <thead>
-							    <tr>
-							      <th scope="col" bgcolor="#99E7BA">CITAS OK!</th>
-							      <th scope="col" bgcolor="#ECA1A7">CITAS PENDIENTES!</th>
-							    </tr>
-							  </thead>
-						 </table> 
-						<table id="tabla_informe2" class="table table-sm table-inverse table-hover responsive" style="font-size: 10px;" width="100%" align="center" border="1" bordercolor="#CCCCCC" cellpadding="4" cellspacing="1">
-							<thead>
-							<tr>
-								<th>CLIENTE</th>
-								<th>HORA</th>
-								<th>FECHA</th>
-								<th>ESTADO</th>
-								<th></th>
-							</tr>     
-							</thead>
-						<tbody>
-						';
-						$CitasPro = CitasPro();
-						$time2 = date("H:i");
-						while(!$CitasPro->EOF)
-					    {
-					    	$id = trim($CitasPro->fields["id"]);
-						    $client2 = trim($CitasPro->fields["nombre"]);
-						    $hora2 = trim($CitasPro->fields["hora"]);
-						    $fecha = trim($CitasPro->fields["fecha"]);
-						   	$sistemfecha = date("Y-m-d");
-
-						   	if($sistemfecha==$fecha)
-						   	{
-						   		if($hora2>trim($time2))
-							    {
-							    	$estado2 = "<b>Cita Pendiente</b>";
-							    	$tr2='bgcolor="#ECA1A7"';
-							    	$buton = '
-									<span class="btn btn-primary pull-left" id="regremenu" onclick="ConfirCancelCitPro('.$id.')">
-										<i class="glyphicon glyphicon-remove-sign" ></i> <b>Cancelar Cita</b>
-									</span>
-							    	';
-							    }else{
-							    	$estado2 = "<b>Cita ok!</b>";
-							    	$tr2='bgcolor="#99E7BA"';
-							    	$buton = '
-									<span class="btn btn-primary pull-left" disabled="disabled">
-										<i class="glyphicon glyphicon-remove-sign" ></i> <b>Cancelar Cita</b>
-									</span>
-							    	';
-							    }
-						   	}else{
-						   		$estado2 = "<b>Cita Pendiente</b>";
-							    $tr2='bgcolor="#ECA1A7"';
-							    $buton = '
-									<span class="btn btn-primary pull-left" id="regremenu" onclick="ConfirCancelCitPro('.$id.')">
-										<i class="glyphicon glyphicon-remove-sign" ></i> <b>Cancelar Cita</b>
-									</span>
-							    	';
-						   	}
-
-							$tabla.='
-								<tr >
-									<td '.$tr2.'>'.$client2.'</td>
-									<td '.$tr2.'>'.$hora2.'</td>
-									<td '.$tr2.'>'.$fecha.'</td>
-									<td '.$tr2.'>'.$estado2.'</td>
-									<td>'.$buton.'</td>
-								</tr> 
-							';
-							$CitasPro->MoveNext();   
-						}	
-						
-						$tabla.='
-					        </body>
-					        <tfoot>
-					            <tr>
-					                <td></td>
-					                <td></td>
-					                <td></td>
-					                <td></td>
-					                <td></td>
-					            </tr>
-					        </tfoot>
-					    </table>
-					</div>
-				</div>
-			</div>';
-
-
-	 $objResponse->Assign("citas", "innerHTML", utf8_decode($tabla));
-	 $objResponse->Script("renderizatablaAyudas('tabla_informe3',[],false,'Bfrtilp');"); 
-
- return $objResponse;
-
-}
-$xajax->registerFunction('citaPrograma');
-
-function CancelCitaPro($id)
-{
-	global $objResponse;	
-	global $BD;    
-	$CanceCitaPro = Cancela_CitaPro($id);
-	if(count($CanceCitaPro)>0)
-	{ 
-		$objResponse->Script("msjcancelacita()");      
-	}else
-	{
-		$objResponse->Script("alerta('<h5 class=text-danger><strong>Atencion! Hubo un error al guardar</strong></h5>')");
-	} 
-
-	return $objResponse;
-}
-$xajax->registerFunction('CancelCitaPro');
 
 ?>

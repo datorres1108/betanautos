@@ -82,7 +82,7 @@ function comprobante()
 	return "OR-".$ultimo;
 }
 
-function CrearOrden($compro,$placa,$kilometros,$gasolina)
+function CrearOrden($compro,$placa,$kilometros,$gasolina,$consentimiento,$json_arrayinve)
 {
 	global $BD;	
 	$BD->conectar(); 
@@ -104,6 +104,8 @@ function CrearOrden($compro,$placa,$kilometros,$gasolina)
 							kilometros,
 							combustible,
 							nota,
+							conserva_pieza,
+							inventario,
 							fecha,
 							estado
 						) 
@@ -114,11 +116,52 @@ function CrearOrden($compro,$placa,$kilometros,$gasolina)
 							'$kilometros',
 							'$gasolina',
 							'',
+							'$consentimiento',
+							'$json_arrayinve',
 							NOW(),
 							'1'
 						)";
 	$movimientos = $BD->consultar($sql);	
 	return $movimientos;
+}
+
+function CrearTPtrabajo($comprobate,$nrocompro,$tipotrabajo,$codigotrabajo,$partevehiculo)
+{
+	global $BD;	
+	$BD->conectar(); 
+
+
+	$tipotrabajo =  trim(strtoupper($tipotrabajo));
+	$codigotrabajo = trim($codigotrabajo);
+	$partevehiculo =  trim(strtoupper($partevehiculo));
+
+	 $sql = "INSERT INTO 
+				tipotra_movi(
+							comprobante,
+							numero,
+							tipo_trabajo,
+							parte,
+							descri_trabajo
+						) 
+				VALUES (
+							'$comprobate',
+							'$nrocompro',
+							'$tipotrabajo',
+							'$codigotrabajo',
+							'$partevehiculo'
+						)";
+	$movimientos = $BD->consultar($sql);	
+	return $movimientos;
+}
+
+function ConsultarTrabajos($orden)
+{
+	global $BD;	
+	$BD->conectar(); 
+	$orden =  trim($orden);
+	$sql="SELECT * FROM tipotra_movi WHERE comprobante='OR' AND numero='$orden'";
+	$vehiculos = $BD->consultar($sql);	
+	return $vehiculos;
 }
 
 // function asigna_citapro($celular,$nomape,$fechacita,$hora)

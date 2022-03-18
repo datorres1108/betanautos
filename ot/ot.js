@@ -279,3 +279,95 @@ function BtnGuardarOR(compro)
   var form = xajax.getFormValues('crear_or');
   xajax.call('GuardarOr', {parameters:[form,compro],mode:'synchronous'});
 }
+
+function BtnCrearTrabajo(compro)
+{
+  var tipotrabajo     = document.getElementById('tipotrabajo').value; 
+  var codigotrabajo   = document.getElementById('codigotrabajo').value;
+  var partevehiculo   = document.getElementById('partevehiculo').value;
+    xajax.call('GuardarTipoTra', {parameters:[compro,tipotrabajo,codigotrabajo,partevehiculo],mode:'synchronous'});
+}
+
+function checbox()
+{
+  var todos         = document.getElementById('todos'); //Marca y desmarca todos los checbox
+  var reloj         = document.getElementById('reloj');
+  var radio         = document.getElementById('radio');
+  var cds           = document.getElementById('cds');
+  var encendedor    = document.getElementById('encendedor');
+  var cenicero      = document.getElementById('cenicero');
+  var forros        = document.getElementById('forros');
+  var tapetes       = document.getElementById('tapetes');
+  var parasoles     = document.getElementById('parasoles');
+  var manijas       = document.getElementById('manijas');
+  var cinturones    = document.getElementById('cinturones');
+  var copas         = document.getElementById('copas');
+  var extinguidor   = document.getElementById('extinguidor');
+  var farolas       = document.getElementById('farolas');
+  var espejos       = document.getElementById('espejos');
+  var antenas       = document.getElementById('antenas');
+  var exploradoras  = document.getElementById('exploradoras');
+  var emblemas      = document.getElementById('emblemas');
+  var cuchillas     = document.getElementById('cuchillas');
+  var llaveros      = document.getElementById('llaveros');
+  var gato          = document.getElementById('gato');
+  var herramienta   = document.getElementById('herramienta');
+  var ruedar        = document.getElementById('ruedar');
+  var tstop         = document.getElementById('tstop');
+  var equipoc       = document.getElementById('equipoc');
+  var stops         = document.getElementById('stops');
+  if(todos.checked) 
+  {
+    reloj.checked= true;
+    radio.checked= true;         
+    cds.checked= true;           
+    encendedor.checked= true;    
+    cenicero.checked= true;      
+    forros.checked= true;        
+    tapetes.checked= true;       
+    parasoles.checked= true;     
+    manijas.checked= true;       
+    cinturones.checked= true;    
+    copas.checked= true;         
+    extinguidor.checked= true;   
+    farolas.checked= true;       
+    espejos.checked= true;       
+    antenas.checked= true;       
+    exploradoras.checked= true;  
+    emblemas.checked= true;      
+    cuchillas.checked= true;     
+    llaveros.checked= true;      
+    gato.checked= true;          
+    herramienta.checked= true;   
+    ruedar.checked= true;        
+    tstop.checked= true;         
+    equipoc.checked= true;       
+    stops.checked= true;         
+  } else {
+    reloj.checked=false;
+    radio.checked= false;         
+    cds.checked= false;           
+    encendedor.checked= false;    
+    cenicero.checked= false;      
+    forros.checked= false;        
+    tapetes.checked= false;       
+    parasoles.checked= false;     
+    manijas.checked= false;       
+    cinturones.checked= false;    
+    copas.checked= false;         
+    extinguidor.checked= false;   
+    farolas.checked= false;       
+    espejos.checked= false;       
+    antenas.checked= false;       
+    exploradoras.checked= false;  
+    emblemas.checked= false;      
+    cuchillas.checked= false;     
+    llaveros.checked= false;      
+    gato.checked= false;          
+    herramienta.checked= false;   
+    ruedar.checked= false;        
+    tstop.checked= false;         
+    equipoc.checked= false;       
+    stops.checked= false;   
+  }
+}

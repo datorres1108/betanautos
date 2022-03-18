@@ -15,20 +15,7 @@
     <script type="text/javascript" src="estilos/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="estilos/bootstrap/js/bootstrap_dialog.js"></script>
 	<script src="https://kit.fontawesome.com/2f89e68d00.js" crossorigin="anonymous"></script>
-	<style type="text/css">
-		#global {
-		height: 200px;
-		width: 100%;		
-		overflow-y: scroll;
-		}
-		#mensajes {
-		height: auto;
-		}
-		.texto {
-		padding:4px;
-		background:#fff;
-		}
-	</style>
+
     </head>
     <body onload="xajax_cargando();xajax_Form_Or();" >
 
